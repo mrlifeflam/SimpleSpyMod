@@ -2423,3 +2423,9 @@ end, function()
 	TextLabel.Text = "Logs cleared!"
 end)
 
+newButton("Relaunch", function()
+	return "Relaunches Really SS incase of bugs"
+end, function()
+        loadstring(game:HttpGet(('https://raw.githubusercontent.com/mrlifeflam/SimpleSpyMod/main/Really%20Simple%20Spy'),true))()
+		TextLabel.Text = "Executed!"
+end)
