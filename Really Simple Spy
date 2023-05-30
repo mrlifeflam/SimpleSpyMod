@@ -1293,68 +1293,77 @@ function genScript(remote, args)
 				.. gen
 		end
 		if remote:IsA("RemoteEvent") then
-			local argstext = "'"
-			local filteredargs = ""
+			local s, r = pcall(function()
+			local argstext = ""
 			local last = false
-			local target
+			local target = nil
 			for i = 1, #args do
 			if i == #args then
 				last = true
 			end
 			target = args[i]
-			local idk = tonumber(target)
-			if typeof(target) == "Instance" then
-			target = "'"..tostring(args[i]:GetFullName()).."'', "
+			if typeof(args[i]) == "Instance" and last == false then
+				target = tostring(args[i]:GetFullName())..", "
+				elseif typeof(args[i]) == "Instance" and last == true then
+				target = tostring(args[i]:GetFullName())
 			end
-			if typeof(target) == "CFrame" then
-				target = "CFrame.new("..tostring(args[i])..")'', "
+			if typeof(args[i]) == "CFrame" and last == false then
+				target = "CFrame.new("..tostring(args[i]).."), "
+				elseif typeof(args[i]) == "CFrame" and last == true then
+				target = "CFrame.new("..tostring(args[i])..")"
 			end
-			if typeof(target) == "Vector3" then
-				target = "Vector3.new("..tostring(args[i])..")'', "
+			if typeof(args[i]) == "Vector3" and last == false then
+				target = "Vector3.new("..tostring(args[i]).."), "
+				elseif typeof(args[i]) == "Vector3" and last == true then
+				target = "Vector3.new("..tostring(args[i])..")"
 			end
-			if last == false and typeof(args[i]) == "string" then
-				print(typeof(args[i]))
-				argstext = "'"..argstext..target.."' , '"
-				target = nil
-			elseif typeof(args[i]) ~= "string" then
-				print(target)
-				argstext = argstext..target
+			if typeof(args[i]) == "string" and last == false --[[and typeof(target) ~= "Instance"]] then
+				target = "'"..tostring(args[i]).."', "
+			elseif typeof(args[i]) == "string" and last == true --[[and typeof(target) ~= "Instance"]] then
+				target = "'"..tostring(args[i]).."'"
 			end
+			argstext = argstext..target
 			end
-			argstext = string.gsub(argstext, "''", "")
-			gen = v2s(remote) .. ":FireServer("..argstext.."'')"
+			gen = v2s(remote) .. ":FireServer("..argstext..")"
+			argstext = ""
+			end)
+			print(s, r)
 		elseif remote:IsA("RemoteFunction") then
-			local argstext = "'"
-			local filteredargs = ""
-			local last = false
-			local target
-			for i = 1, #args do
-			if i == #args then
-				last = true
-			end
-			target = args[i]
-			local idk = tonumber(target)
-			if typeof(target) == "Instance" then
-			target = "'"..tostring(args[i]:GetFullName()).."'', "
-			end
-			if typeof(target) == "CFrame" then
-				target = "CFrame.new("..tostring(args[i])..")'', "
-			end
-			if typeof(target) == "Vector3" then
-				target = "Vector3.new("..tostring(args[i])..")'', "
-			end
-			if last == false and typeof(args[i]) == "string" then
-				print(typeof(args[i]))
-				argstext = "'"..argstext..target.."' , '"
-				target = nil
-			elseif typeof(args[i]) ~= "string" then
-				print(target)
+			local s, r = pcall(function()
+				local argstext = ""
+				local last = false
+				local target = nil
+				for i = 1, #args do
+				if i == #args then
+					last = true
+				end
+				target = args[i]
+				if typeof(args[i]) == "Instance" and last == false then
+					target = tostring(args[i]:GetFullName())..", "
+					elseif typeof(args[i]) == "Instance" and last == true then
+					target = tostring(args[i]:GetFullName())
+				end
+				if typeof(args[i]) == "CFrame" and last == false then
+					target = "CFrame.new("..tostring(args[i]).."), "
+					elseif typeof(args[i]) == "CFrame" and last == true then
+					target = "CFrame.new("..tostring(args[i])..")"
+				end
+				if typeof(args[i]) == "Vector3" and last == false then
+					target = "Vector3.new("..tostring(args[i]).."), "
+					elseif typeof(args[i]) == "Vector3" and last == true then
+					target = "Vector3.new("..tostring(args[i])..")"
+				end
+				if typeof(args[i]) == "string" and last == false --[[and typeof(target) ~= "Instance"]] then
+					target = "'"..tostring(args[i]).."', "
+				elseif typeof(args[i]) == "string" and last == true --[[and typeof(target) ~= "Instance"]] then
+					target = "'"..tostring(args[i]).."'"
+				end
 				argstext = argstext..target
-			end
-			end
-			argstext = string.gsub(argstext, "''", "")
-			--gen = gen .. v2s(remote) .. ":InvokeServer(unpack('"..argstext.."')"
-			gen = v2s(remote) .. ":InvokeServer("..argstext.."'')"
+				end
+				gen = v2s(remote) .. ":InvokeServer("..argstext..")"
+				argstext = ""
+				end)
+				print(s, r)
 		end
 	else
 		if remote:IsA("RemoteEvent") then
@@ -2431,7 +2440,25 @@ end)
 
 
 --- Gets the calling script (not super reliable but w/e)
+newButton("Get Script", function()
+	return "Click to copy calling script to clipboard\nWARNING: Not super reliable, nil == could not find"
+end, function()
+	if selected then
+		setclipboard(SimpleSpy:ValueToString(selected.Source))
+		codebox:setRaw(SimpleSpy:ValueToString(selected.Source))
+		TextLabel.Text = "Copied and displayed!"
+	end
+end)
 
+newButton("Reload", function()
+	return "Reloads the Canvas to display remote"
+end, function()
+	if selected then
+		
+		codebox:setRaw(selected.GenScript)
+		TextLabel.Text = "Done!"
+	end
+end)
 
 --- Decompiles the script that fired the remote and puts it in the code box
 
