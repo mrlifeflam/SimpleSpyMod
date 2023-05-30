@@ -1293,7 +1293,8 @@ function genScript(remote, args)
 				.. gen
 		end
 		if remote:IsA("RemoteEvent") then
-			local argstext = ""
+			local argstext = "'"
+			local filteredargs = ""
 			local last = false
 			local target
 			for i = 1, #args do
@@ -1303,22 +1304,28 @@ function genScript(remote, args)
 			target = args[i]
 			local idk = tonumber(target)
 			if typeof(target) == "Instance" then
-			target = tostring(args[i]:GetFullName())
+			target = "'"..tostring(args[i]:GetFullName()).."'', "
 			end
-			if typeof(target) ~= "String" and typeof(target) ~= "Instance" then
-				target = tostring(args[i])
-				print(target)
+			if typeof(target) == "CFrame" then
+				target = "CFrame.new("..tostring(args[i])..")'', "
 			end
-			argstext = argstext..target
-			print(argstext)
-			if last == false then
-				argstext = argstext.."' , '"
+			if typeof(target) == "Vector3" then
+				target = "Vector3.new("..tostring(args[i])..")'', "
+			end
+			if last == false and typeof(args[i]) == "string" then
+				print(typeof(args[i]))
+				argstext = "'"..argstext..target.."' , '"
 				target = nil
+			elseif typeof(args[i]) ~= "string" then
+				print(target)
+				argstext = argstext..target
 			end
 			end
-			gen = v2s(remote) .. ":FireServer('"..argstext.."')"
+			argstext = string.gsub(argstext, "''", "")
+			gen = v2s(remote) .. ":FireServer("..argstext.."'')"
 		elseif remote:IsA("RemoteFunction") then
-			local argstext = ""
+			local argstext = "'"
+			local filteredargs = ""
 			local last = false
 			local target
 			for i = 1, #args do
@@ -1328,21 +1335,26 @@ function genScript(remote, args)
 			target = args[i]
 			local idk = tonumber(target)
 			if typeof(target) == "Instance" then
-			target = tostring(args[i]:GetFullName())
+			target = "'"..tostring(args[i]:GetFullName()).."'', "
 			end
-			if typeof(target) ~= "String" and typeof(target) ~= "Instance" then
-				target = tostring(args[i])
-				print(target)
+			if typeof(target) == "CFrame" then
+				target = "CFrame.new("..tostring(args[i])..")'', "
 			end
-			argstext = argstext..target
-			print(argstext)
-			if last == false then
-				argstext = argstext.."' , '"
+			if typeof(target) == "Vector3" then
+				target = "Vector3.new("..tostring(args[i])..")'', "
+			end
+			if last == false and typeof(args[i]) == "string" then
+				print(typeof(args[i]))
+				argstext = "'"..argstext..target.."' , '"
 				target = nil
+			elseif typeof(args[i]) ~= "string" then
+				print(target)
+				argstext = argstext..target
 			end
 			end
+			argstext = string.gsub(argstext, "''", "")
 			--gen = gen .. v2s(remote) .. ":InvokeServer(unpack('"..argstext.."')"
-			gen = v2s(remote) .. ":InvokeServer('"..argstext.."')"
+			gen = v2s(remote) .. ":InvokeServer("..argstext.."'')"
 		end
 	else
 		if remote:IsA("RemoteEvent") then
@@ -2414,27 +2426,11 @@ end, function()
 end)
 
 --- Copies the source script (that fired the remote)
-newButton("Copy Remote", function()
-	return "Click to copy the path of the remote"
-end, function()
-	if selected then
-		setclipboard(v2s(selected.Remote.remote))
-		TextLabel.Text = "Copied!"
-	end
-end)
 
 -- Executes the contents of the codebox through loadstring
 
 
 --- Gets the calling script (not super reliable but w/e)
-newButton("Get Script", function()
-	return "Click to copy calling script to clipboard\nWARNING: Not super reliable, nil == could not find"
-end, function()
-	if selected then
-		setclipboard(SimpleSpy:ValueToString(selected.Source))
-		TextLabel.Text = "Done!"
-	end
-end)
 
 
 --- Decompiles the script that fired the remote and puts it in the code box
