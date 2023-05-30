@@ -1293,11 +1293,42 @@ function genScript(remote, args)
 				.. gen
 		end
 		if remote:IsA("RemoteEvent") then
-			local argstext = table.concat(args, "', '")
-			--gen = gen .. v2s(remote) .. ":FireServer(unpack('"..argstext.."')"
+			local argstext = ""
+			local last = false
+			local target
+			for i = 1, #args do
+			target = args[i]
+			local idk = tonumber(target)
+			if idk == nil and args[i].Parent ~= nil then
+			target = tostring(args[i]:GetFullName())
+			end
+			if i == #args then
+				last = true
+			end
+			argstext = argstext..target
+			if last == false then
+				argstext = argstext.."' , '"
+			end
+			end
 			gen = v2s(remote) .. ":FireServer('"..argstext.."')"
 		elseif remote:IsA("RemoteFunction") then
-			local argstext = table.concat(args, "', '")
+			local argstext = ""
+			local last = false
+			local target
+			for i = 1, #args do
+			target = args[i]
+			local idk = tonumber(target)
+			if idk == nil and args[i].Parent ~= nil then
+			target = tostring(args[i]:GetFullName())
+			end
+			if i == #args then
+				last = true
+			end
+			argstext = argstext..target
+			if last == false then
+				argstext = argstext.."' , '"
+			end
+			end
 			--gen = gen .. v2s(remote) .. ":InvokeServer(unpack('"..argstext.."')"
 			gen = v2s(remote) .. ":InvokeServer('"..argstext.."')"
 		end
@@ -2349,6 +2380,20 @@ end
             - codebox: (Instance (TextBox)) the textbox that holds all the code- cleared often
 ]]
 -- Copies the contents of the codebox
+newButton("Execute", function()
+	return "Click to execute code"
+end, function()
+	local orText = "Click to execute code"
+	TextLabel.Text = "Executing..."
+	local succeeded = pcall(function()
+		return loadstring(codebox:getString())()
+	end)
+	if succeeded then
+		TextLabel.Text = "Executed successfully!"
+	else
+		TextLabel.Text = "Execution error!"
+	end
+end)
 newButton("Copy Code", function()
 	return "Click to copy code"
 end, function()
@@ -2367,20 +2412,7 @@ end, function()
 end)
 
 -- Executes the contents of the codebox through loadstring
-newButton("Execute", function()
-	return "Click to execute code"
-end, function()
-	local orText = "Click to execute code"
-	TextLabel.Text = "Executing..."
-	local succeeded = pcall(function()
-		return loadstring(codebox:getString())()
-	end)
-	if succeeded then
-		TextLabel.Text = "Executed successfully!"
-	else
-		TextLabel.Text = "Execution error!"
-	end
-end)
+
 
 --- Gets the calling script (not super reliable but w/e)
 newButton("Get Script", function()
@@ -2394,19 +2426,7 @@ end)
 
 
 --- Decompiles the script that fired the remote and puts it in the code box
---[[newButton("Function Info", function()
-	return "Decompiles the script that fired the remote"
-end, function()
-	if selected then
-		if selected.Function then
-			codebox:setRaw(
-				tostring(selected.Function)
-			)
-		end
-		TextLabel.Text = "Done!"
-	end
-end)
-]]
+
 newButton("Clr Logs", function()
 	return "Click to clear logs"
 end, function()
