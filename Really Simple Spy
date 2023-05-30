@@ -1297,17 +1297,23 @@ function genScript(remote, args)
 			local last = false
 			local target
 			for i = 1, #args do
-			target = args[i]
-			local idk = tonumber(target)
-			if idk == nil and args[i].Parent ~= nil then
-			target = tostring(args[i]:GetFullName())
-			end
 			if i == #args then
 				last = true
 			end
+			target = args[i]
+			local idk = tonumber(target)
+			if typeof(target) == "Instance" then
+			target = tostring(args[i]:GetFullName())
+			end
+			if typeof(target) ~= "String" and typeof(target) ~= "Instance" then
+				target = tostring(args[i])
+				print(target)
+			end
 			argstext = argstext..target
+			print(argstext)
 			if last == false then
 				argstext = argstext.."' , '"
+				target = nil
 			end
 			end
 			gen = v2s(remote) .. ":FireServer('"..argstext.."')"
@@ -1316,17 +1322,23 @@ function genScript(remote, args)
 			local last = false
 			local target
 			for i = 1, #args do
-			target = args[i]
-			local idk = tonumber(target)
-			if idk == nil and args[i].Parent ~= nil then
-			target = tostring(args[i]:GetFullName())
-			end
 			if i == #args then
 				last = true
 			end
+			target = args[i]
+			local idk = tonumber(target)
+			if typeof(target) == "Instance" then
+			target = tostring(args[i]:GetFullName())
+			end
+			if typeof(target) ~= "String" and typeof(target) ~= "Instance" then
+				target = tostring(args[i])
+				print(target)
+			end
 			argstext = argstext..target
+			print(argstext)
 			if last == false then
 				argstext = argstext.."' , '"
+				target = nil
 			end
 			end
 			--gen = gen .. v2s(remote) .. ":InvokeServer(unpack('"..argstext.."')"
