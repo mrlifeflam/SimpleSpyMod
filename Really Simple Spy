@@ -1318,9 +1318,9 @@ function genScript(remote, args)
 					target = "Vector3.new("..tostring(args[i])..")"
 				end
 				if typeof(args[i]) == "string" and last == false --[[and typeof(target) ~= "Instance"]] then
-					target = "'"..tostring(args[i]).."', "
+					target = '"'..tostring(args[i])..'", '
 				elseif typeof(args[i]) == "string" and last == true --[[and typeof(target) ~= "Instance"]] then
-					target = "'"..tostring(args[i]).."'"
+					target = '"'..tostring(args[i]).."'"
 				end
 				if typeof(args[i]) == "boolean" and last == false --[[and typeof(target) ~= "Instance"]] then
 					target = tostring(args[i])..", "
@@ -1359,9 +1359,9 @@ function genScript(remote, args)
 					target = "Vector3.new("..tostring(args[i])..")"
 				end
 				if typeof(args[i]) == "string" and last == false --[[and typeof(target) ~= "Instance"]] then
-					target = "'"..tostring(args[i]).."', "
+					target = '"'..tostring(args[i])..'", '
 				elseif typeof(args[i]) == "string" and last == true --[[and typeof(target) ~= "Instance"]] then
-					target = "'"..tostring(args[i]).."'"
+					target = '"'..tostring(args[i]).."'"
 				end
 				if typeof(args[i]) == "boolean" and last == false --[[and typeof(target) ~= "Instance"]] then
 					target = tostring(args[i])..", "
