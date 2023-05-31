@@ -1294,39 +1294,44 @@ function genScript(remote, args)
 		end
 		if remote:IsA("RemoteEvent") then
 			local s, r = pcall(function()
-			local argstext = ""
-			local last = false
-			local target = nil
-			for i = 1, #args do
-			if i == #args then
-				last = true
-			end
-			target = args[i]
-			if typeof(args[i]) == "Instance" and last == false then
-				target = tostring(args[i]:GetFullName())..", "
-				elseif typeof(args[i]) == "Instance" and last == true then
-				target = tostring(args[i]:GetFullName())
-			end
-			if typeof(args[i]) == "CFrame" and last == false then
-				target = "CFrame.new("..tostring(args[i]).."), "
-				elseif typeof(args[i]) == "CFrame" and last == true then
-				target = "CFrame.new("..tostring(args[i])..")"
-			end
-			if typeof(args[i]) == "Vector3" and last == false then
-				target = "Vector3.new("..tostring(args[i]).."), "
-				elseif typeof(args[i]) == "Vector3" and last == true then
-				target = "Vector3.new("..tostring(args[i])..")"
-			end
-			if typeof(args[i]) == "string" and last == false --[[and typeof(target) ~= "Instance"]] then
-				target = "'"..tostring(args[i]).."', "
-			elseif typeof(args[i]) == "string" and last == true --[[and typeof(target) ~= "Instance"]] then
-				target = "'"..tostring(args[i]).."'"
-			end
-			argstext = argstext..target
-			end
-			gen = v2s(remote) .. ":FireServer("..argstext..")"
-			argstext = ""
-			end)
+				local argstext = ""
+				local last = false
+				local target = nil
+				for i = 1, #args do
+				if i == #args then
+					last = true
+				end
+				target = args[i]
+				if typeof(args[i]) == "Instance" and last == false then
+					target = tostring(args[i]:GetFullName())..", "
+					elseif typeof(args[i]) == "Instance" and last == true then
+					target = tostring(args[i]:GetFullName())
+				end
+				if typeof(args[i]) == "CFrame" and last == false then
+					target = "CFrame.new("..tostring(args[i]).."), "
+					elseif typeof(args[i]) == "CFrame" and last == true then
+					target = "CFrame.new("..tostring(args[i])..")"
+				end
+				if typeof(args[i]) == "Vector3" and last == false then
+					target = "Vector3.new("..tostring(args[i]).."), "
+					elseif typeof(args[i]) == "Vector3" and last == true then
+					target = "Vector3.new("..tostring(args[i])..")"
+				end
+				if typeof(args[i]) == "string" and last == false --[[and typeof(target) ~= "Instance"]] then
+					target = "'"..tostring(args[i]).."', "
+				elseif typeof(args[i]) == "string" and last == true --[[and typeof(target) ~= "Instance"]] then
+					target = "'"..tostring(args[i]).."'"
+				end
+				if typeof(args[i]) == "boolean" and last == false --[[and typeof(target) ~= "Instance"]] then
+					target = tostring(args[i])..", "
+				elseif typeof(args[i]) == "boolean" and last == true --[[and typeof(target) ~= "Instance"]] then
+					target = tostring(args[i])
+				end
+				argstext = argstext..target
+				end
+				gen = v2s(remote) .. ":FireServer("..argstext..")"
+				argstext = ""
+				end)
 			print(s, r)
 		elseif remote:IsA("RemoteFunction") then
 			local s, r = pcall(function()
@@ -1357,6 +1362,11 @@ function genScript(remote, args)
 					target = "'"..tostring(args[i]).."', "
 				elseif typeof(args[i]) == "string" and last == true --[[and typeof(target) ~= "Instance"]] then
 					target = "'"..tostring(args[i]).."'"
+				end
+				if typeof(args[i]) == "boolean" and last == false --[[and typeof(target) ~= "Instance"]] then
+					target = tostring(args[i])..", "
+				elseif typeof(args[i]) == "boolean" and last == true --[[and typeof(target) ~= "Instance"]] then
+					target = tostring(args[i])
 				end
 				argstext = argstext..target
 				end
