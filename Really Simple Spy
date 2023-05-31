@@ -1320,8 +1320,8 @@ function genScript(remote, args)
 				if typeof(args[i]) == "string" and last == false --[[and typeof(target) ~= "Instance"]] then
 					target = '"'..tostring(args[i])..'", '
 				elseif typeof(args[i]) == "string" and last == true --[[and typeof(target) ~= "Instance"]] then
-					target = '"'..tostring(args[i]).."'"
-				end
+					target = '"'..tostring(args[i])..'"'
+			end
 				if typeof(args[i]) == "boolean" and last == false --[[and typeof(target) ~= "Instance"]] then
 					target = tostring(args[i])..", "
 				elseif typeof(args[i]) == "boolean" and last == true --[[and typeof(target) ~= "Instance"]] then
@@ -1361,7 +1361,7 @@ function genScript(remote, args)
 				if typeof(args[i]) == "string" and last == false --[[and typeof(target) ~= "Instance"]] then
 					target = '"'..tostring(args[i])..'", '
 				elseif typeof(args[i]) == "string" and last == true --[[and typeof(target) ~= "Instance"]] then
-					target = '"'..tostring(args[i]).."'"
+					target = '"'..tostring(args[i])..'"'
 				end
 				if typeof(args[i]) == "boolean" and last == false --[[and typeof(target) ~= "Instance"]] then
 					target = tostring(args[i])..", "
